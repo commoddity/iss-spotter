@@ -7,12 +7,12 @@ const fetchMyIP = () => {
 
 const fetchCoordsByIP = (body) => {
   const ip = JSON.parse(body).ip;
-  return request(`https://ipvigilante.com/json/${ip}`);
+  return request(`https://ipvigilante.com/${ip}`);
 };
 
 const fetchISSFlyOverTimes = function(body) {
-  const { lat, lon } = JSON.parse(body).data;
-  const url = `http://api.open-notify.org/iss-pass.json?lat=${lat}&lon=${lon}`;
+  const { latitude, longitude } = JSON.parse(body).data;
+  const url = `http://api.open-notify.org/iss-pass.json?lat=${latitude}&lon=${longitude}`;
   return request(url);
 };
 
@@ -26,4 +26,14 @@ const nextISSTimesForMyLocation = function() {
     });
 };
 
-module.exports = { nextISSTimesForMyLocation };
+const printPassTimes = function(passTimes) {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
+  }
+};
+
+
+module.exports = { nextISSTimesForMyLocation, printPassTimes };
